@@ -55,19 +55,19 @@ void mod_consumer_usage(uint16_t usage, bool is_add);
 void clear_usage_report(report_extra_t *er);
 void send_extra_report(report_extra_t *er);
 
-inline void clear_system_usage(void) {
+static inline void clear_system_usage(void) {
     clear_usage_report(system_report);
 }
 
-inline void clear_consumer_usage(void) {
+static inline void clear_consumer_usage(void) {
     clear_usage_report(consumer_report);
 }
 
-inline void send_system_report(void) {
+static inline void send_system_report(void) {
     send_extra_report(system_report);
 }
 
-inline void send_consumer_report(void) {
+static inline void send_consumer_report(void) {
     send_extra_report(consumer_report);
 }
 #endif
