@@ -29,6 +29,10 @@ extern report_keyboard_t *keyboard_report;
 #ifdef NKRO_ENABLE
 extern report_nkro_t *nkro_report;
 #endif
+#ifdef EXTRAKEY_ENABLE
+extern report_extra_t *system_report;
+extern report_extra_t *consumer_report;
+#endif
 
 void send_keyboard_report(void);
 
@@ -44,6 +48,29 @@ inline void del_key(uint8_t key) {
 inline void clear_keys(void) {
     clear_keys_from_report();
 }
+
+#ifdef EXTRAKEY_ENABLE
+void mod_system_usage(uint16_t usage, bool is_add);
+void mod_consumer_usage(uint16_t usage, bool is_add);
+void clear_usage_report(report_extra_t *er);
+void send_extra_report(report_extra_t *er);
+
+inline void clear_system_usage(void) {
+    clear_usage_report(system_report);
+}
+
+inline void clear_consumer_usage(void) {
+    clear_usage_report(consumer_report);
+}
+
+inline void send_system_report(void) {
+    send_extra_report(system_report);
+}
+
+inline void send_consumer_report(void) {
+    send_extra_report(consumer_report);
+}
+#endif
 
 /* modifier */
 uint8_t get_mods(void);

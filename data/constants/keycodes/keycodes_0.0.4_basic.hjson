@@ -1,0 +1,14 @@
+{
+    "keycodes": {
+        "0x00C3": {
+            "group": "media",
+            "key": "KC_GLOBE",
+            "label": "Apple Globe/FN Key"
+        },
+        "0x00C4": {
+            "group": "system",
+            "key": "KC_SYSTEM_DO_NOT_DISTURB",
+            "label": "System Do Not Disturb"
+        }
+    }
+}

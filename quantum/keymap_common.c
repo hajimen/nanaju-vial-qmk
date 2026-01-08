@@ -72,6 +72,7 @@ action_t action_for_keycode(uint16_t keycode) {
             action.code = ACTION_KEY(keycode);
             break;
 #ifdef EXTRAKEY_ENABLE
+        case KC_SYSTEM_DO_NOT_DISTURB:
         case SYSTEM_KEYCODE_RANGE:
             action.code = ACTION_USAGE_SYSTEM(KEYCODE2SYSTEM(keycode));
             break;

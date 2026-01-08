@@ -183,32 +183,11 @@ void host_mouse_send(report_mouse_t *report) {
     (*driver->send_mouse)(report);
 }
 
-void host_system_send(uint16_t usage) {
-    if (usage == last_system_usage) return;
-    last_system_usage = usage;
-
+void host_extra_send(report_extra_t *er) {
     host_driver_t *driver = host_get_active_driver();
     if (!driver || !driver->send_extra) return;
 
-    report_extra_t report = {
-        .report_id = REPORT_ID_SYSTEM,
-        .usage     = usage,
-    };
-    (*driver->send_extra)(&report);
-}
-
-void host_consumer_send(uint16_t usage) {
-    if (usage == last_consumer_usage) return;
-    last_consumer_usage = usage;
-
-    host_driver_t *driver = host_get_active_driver();
-    if (!driver || !driver->send_extra) return;
-
-    report_extra_t report = {
-        .report_id = REPORT_ID_CONSUMER,
-        .usage     = usage,
-    };
-    (*driver->send_extra)(&report);
+    (*driver->send_extra)(er);
 }
 
 #ifdef JOYSTICK_ENABLE

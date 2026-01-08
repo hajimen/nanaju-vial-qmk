@@ -559,10 +559,12 @@ void process_action(keyrecord_t *record, action_t action) {
         case ACT_USAGE:
             switch (action.usage.page) {
                 case PAGE_SYSTEM:
-                    host_system_send(event.pressed ? action.usage.code : 0);
+                    mod_system_usage(action.usage.code, event.pressed);
+                    send_system_report();
                     break;
                 case PAGE_CONSUMER:
-                    host_consumer_send(event.pressed ? action.usage.code : 0);
+                    mod_consumer_usage(action.usage.code, event.pressed);
+                    send_consumer_report();
                     break;
             }
             break;
@@ -965,9 +967,11 @@ __attribute__((weak)) void register_code(uint8_t code) {
 
 #ifdef EXTRAKEY_ENABLE
     } else if (IS_SYSTEM_KEYCODE(code)) {
-        host_system_send(KEYCODE2SYSTEM(code));
+        mod_system_usage(KEYCODE2SYSTEM(code), true);
+        send_system_report();
     } else if (IS_CONSUMER_KEYCODE(code)) {
-        host_consumer_send(KEYCODE2CONSUMER(code));
+        mod_consumer_usage(KEYCODE2CONSUMER(code), true);
+        send_consumer_report();
 #endif
 
     } else if (IS_MOUSE_KEYCODE(code)) {
@@ -1022,9 +1026,11 @@ __attribute__((weak)) void unregister_code(uint8_t code) {
 
 #ifdef EXTRAKEY_ENABLE
     } else if (IS_SYSTEM_KEYCODE(code)) {
-        host_system_send(0);
+        mod_system_usage(KEYCODE2SYSTEM(code), false);
+        send_system_report();
     } else if (IS_CONSUMER_KEYCODE(code)) {
-        host_consumer_send(0);
+        mod_consumer_usage(KEYCODE2CONSUMER(code), false);
+        send_consumer_report();
 #endif
 
     } else if (IS_MOUSE_KEYCODE(code)) {
@@ -1119,8 +1125,10 @@ void clear_keyboard_but_mods(void) {
  */
 void clear_keyboard_but_mods_and_keys(void) {
 #ifdef EXTRAKEY_ENABLE
-    host_system_send(0);
-    host_consumer_send(0);
+    clear_system_usage();
+    send_system_report();
+    clear_consumer_usage();
+    send_consumer_report();
 #endif
     clear_weak_mods();
     send_keyboard_report();

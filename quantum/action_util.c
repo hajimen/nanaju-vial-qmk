@@ -39,6 +39,58 @@ report_keyboard_t *keyboard_report = &(report_keyboard_t){};
 #ifdef NKRO_ENABLE
 report_nkro_t *nkro_report = &(report_nkro_t){};
 #endif
+#ifdef EXTRAKEY_ENABLE
+report_extra_t *system_report = &(report_extra_t){ .report_id = REPORT_ID_SYSTEM, .usage = 0U };
+report_extra_t *consumer_report = &(report_extra_t){ .report_id = REPORT_ID_CONSUMER, .usage = 0U };
+
+void mod_system_usage(uint16_t usage, bool is_add) {
+    if (usage == SYSTEM_DO_NOT_DISTURB) {
+        if (is_add) {
+            system_report->usage |= (1 << 2);
+        } else {
+            system_report->usage &= ~((uint16_t)(1 << 2));
+        }
+        return;
+    }
+
+    system_report->usage &= ~(3);
+    if (is_add) {
+        switch (usage) {
+        case SYSTEM_SLEEP:
+            system_report->usage |= 1;
+            break;
+        case SYSTEM_POWER_DOWN:
+            system_report->usage |= 2;
+            break;
+        case SYSTEM_WAKE_UP:
+            system_report->usage |= 3;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void mod_consumer_usage(uint16_t usage, bool is_add) {
+    consumer_report->usage = is_add ? usage : 0U;
+}
+
+void clear_usage_report(report_extra_t *er) {
+    er->usage = 0U;
+}
+
+void send_extra_report(report_extra_t *er) {
+    static report_extra_t last_reports[2];
+    report_extra_t *last_report = (er->report_id == REPORT_ID_SYSTEM) ? last_reports : last_reports + 1;
+
+    /* Only send the report if there are changes to propagate to the host. */
+    if (memcmp(er, last_report, sizeof(report_extra_t)) != 0) {
+        memcpy(last_report, er, sizeof(report_extra_t));
+        host_extra_send(er);
+    }
+}
+
+#endif
 
 extern inline void add_key(uint8_t key);
 extern inline void del_key(uint8_t key);

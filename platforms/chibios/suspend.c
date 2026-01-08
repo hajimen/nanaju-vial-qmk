@@ -47,8 +47,10 @@ void suspend_wakeup_init(void) {
     programmable_button_clear();
 #endif /* PROGRAMMABLE_BUTTON_ENABLE */
 #ifdef EXTRAKEY_ENABLE
-    host_system_send(0);
-    host_consumer_send(0);
+    clear_system_usage();
+    send_system_report();
+    clear_consumer_usage();
+    send_consumer_report();
 #endif /* EXTRAKEY_ENABLE */
 
     suspend_wakeup_init_quantum();
