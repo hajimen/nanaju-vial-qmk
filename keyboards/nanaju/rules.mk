@@ -1,0 +1,9 @@
+BOARD = GENERIC_RP_RP2040
+
+CUSTOM_MATRIX = lite
+
+REV = 20260508
+
+NANAJU = full # "full" or "kvm"
+
+DEBUG_ENABLE = no

@@ -1,0 +1,24 @@
+{
+    "manufacturer": "DecentKeyboards",
+    "keyboard_name": "Nanaju",
+    "url": "https://github.com/hajimen/nanaju/wiki",
+    "maintainer": "DecentKeyboards",
+    "bootloader": "rp2040",
+    "processor": "RP2040",
+    "diode_direction": "ROW2COL",
+    "usb": {
+        "device_version": "0.0.1",
+        "pid": "0x05DF",
+        "vid": "0xF055",
+        "max_power": 100
+    },
+    "layouts": {
+        "LAYOUT": {
+            "layout": [{"matrix": [0, 0], "x":0, "y":0}]
+        }
+    },
+    "build": {
+        "debounce_type": "asym_eager_defer_pk"
+    },
+    "debounce": 5
+}
