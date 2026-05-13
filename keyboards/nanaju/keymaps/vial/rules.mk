@@ -1,3 +1,5 @@
+SRC += qa_test.c
+
 ifeq ($(strip $(NANAJU)), kvm)
 	OPT_DEFS += -DPRODUCT=\"DecentKeyboards\ Nanaju\ KVM\ rev\ $(REV)\"
 endif
@@ -17,7 +19,6 @@ endif
 ifeq ($(strip $(NANAJU)), test_fixture)
 	OPT_DEFS += -DPRODUCT=\"DecentKeyboards\ Nanaju\ Test\ Fixture\ rev\ $(REV)\"
 	OPT_DEFS += -DTEST_FIXTURE
-	SRC += test_fixture.c
 endif
 
 EXTRAKEY_ENABLE = yes

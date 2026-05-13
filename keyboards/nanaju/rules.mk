@@ -2,7 +2,7 @@ BOARD = GENERIC_RP_RP2040
 
 CUSTOM_MATRIX = lite
 
-REV = 20260508
+REV = 20260513
 
 NANAJU = full # "full" or "kvm"
 

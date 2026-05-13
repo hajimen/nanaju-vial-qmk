@@ -18,7 +18,7 @@
 #include <stdbool.h>
 #include "quantum.h"
 #include "matrix.h"
-#include "test_fixture.h"
+#include "qa_test.h"
 #include QMK_KEYBOARD_H
 
 #define R1 GP18

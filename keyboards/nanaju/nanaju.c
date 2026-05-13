@@ -19,7 +19,7 @@
 #include "quantum.h"
 #include "matrix.h"
 #include "usb_device_state.h"
-#include "test_fixture.h"
+#include "qa_test.h"
 #include QMK_KEYBOARD_H
 extern uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS];
 
@@ -126,17 +126,16 @@ static void __not_in_flash_func(repeat_callback)(virtual_timer_t *vtp, void *p) 
     multi_blink_on = (blink_count != 0);
 }
 
-#ifdef TEST_FIXTURE
 static bool is_qa_test = false;
-#endif
 
 void matrix_init_kb(void) {
-#ifdef TEST_FIXTURE
+    gpio_atomic_set_pin_output_low(CONDUCT_TEST_LED);
+
     if (check_qa_fixture()) {
         is_qa_test = true;
+        gpio_set_pin_input_high(ROTARY_R2);
         return;
     }
-#endif
 
     unselect_cols();
     gpio_atomic_set_pin_input_high(ROTARY_C);
@@ -146,7 +145,6 @@ void matrix_init_kb(void) {
         }
     }
 
-    gpio_atomic_set_pin_output_low(CONDUCT_TEST_LED);
     matrix_scan();
     wait_ms(DEBOUNCE);
     matrix_scan();
@@ -196,12 +194,10 @@ layer_state_t default_layer_state_set_kb(layer_state_t state) {
 }
 
 bool matrix_scan_custom(matrix_row_t raw_matrix[]) {
-#ifdef TEST_FIXTURE
-    if (is_qa_test) {
-        return false;
-    }
-#endif
 
+    if (is_qa_test) {
+        gpio_set_pin_input_high(ROTARY_R1);
+    }
     matrix_row_t curr_matrix[MATRIX_ROWS] = {0};
 
     gpio_atomic_set_pin_output_low(ROTARY_C);
@@ -222,6 +218,13 @@ bool matrix_scan_custom(matrix_row_t raw_matrix[]) {
     }
     gpio_atomic_set_pin_input_high(ROTARY_C);
     matrix_output_select_delay();
+
+    if (is_qa_test) {
+        gpio_set_pin_output(ROTARY_R1);
+        gpio_write_pin(ROTARY_R1, 1);
+        writePin(CONDUCT_TEST_LED, default_layer % 2);
+        return false;
+    }
 
     // Set col, read rows
     matrix_row_t row_shifter = MATRIX_ROW_SHIFTER;
